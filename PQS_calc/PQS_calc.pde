@@ -1,3 +1,4 @@
+
 void setup()
 {
   autoadcsetup();
@@ -53,15 +54,15 @@ void loop()
   if (flag){
     //has new data
     frequency = 4096 / ((float)(signalperiod));
-    phase = 6.28 *  phaseperiod / signalperiod;
+    phase = (2*3.1416) *  phaseperiod / signalperiod;
     S = urms * irms;
     P = S * cos (phase);
     Q = S * sin (phase);
     flag = 0;
     Serial.print("U= ");
-    Serial.println(urms);
+    Serial.print(urms);
     Serial.print("I= ");
-    Serial.println(irms);
+    Serial.print(irms);
     Serial.print(" f= ");
     Serial.print(frequency);
     Serial.print(" cos= ");
@@ -71,7 +72,7 @@ void loop()
     Serial.print(" P= ");
     Serial.print(P);
     Serial.print(" Q= ");
-    Serial.print(Q);
+    Serial.println(Q);
   }
 }
 int i = 255;
@@ -111,7 +112,7 @@ ISR(ADC_vect){
       umoment += (ADCH<<8);
       umoment = umoment - 512;
       utemp = utemp + pow((double)(umoment),2)/4096;
-      channel = CU_I;//switch channel
+      channel = CH_I;//switch channel
       ADMUX |=(1<<MUX0);//to I
       //zero-crossdetect
       if ((umoment_old <= 0) && (umoment > 0)){
@@ -149,6 +150,7 @@ ISR(ADC_vect){
       irms = sqrt(itemp)/102;
       N = 0;
       utemp = 0;
+      itemp = 0;
       flag = 1;
       if (PIND & (1<<PD3)){
         PORTD &= ~(1<<PD3);    
